@@ -23,8 +23,11 @@ class MainActivity : Activity() {
   var busy = false
   val TAG = "SF4Loader"
 
-  fun ui(s: String) { try { handler.post { log.text = s }; Log.i(TAG, s) } catch (e: Exception) {} }
-  fun uiAppend(s: String) { try { handler.post { log.append("\n$s") }; Log.i(TAG, s) } catch (e: Exception) {} }
+  fun fileAppend(name: String, s: String) {
+    try { openFileOutput(name, MODE_APPEND).use { it.write((s + "\n").toByteArray()) } } catch (e: Exception) {}
+  }
+  fun ui(s: String) { try { handler.post { log.text = s }; Log.i(TAG, s); fileAppend("marks.txt", s) } catch (e: Exception) {} }
+  fun uiAppend(s: String) { try { handler.post { log.append("\n$s") }; Log.i(TAG, s); fileAppend("marks.txt", s) } catch (e: Exception) {} }
 
   fun runSu(cmd: String): String = try {
     val p = Runtime.getRuntime().exec(arrayOf("su", "-c", cmd))
@@ -44,16 +47,29 @@ class MainActivity : Activity() {
 
   override fun onCreate(s: Bundle?) {
     super.onCreate(s)
-    Thread.setDefaultUncaughtExceptionHandler { _, e ->
-      try { Log.e(TAG, "CRASH: $e") } catch (_: Exception) {}
+    val defHandler = Thread.getDefaultUncaughtExceptionHandler()
+    Thread.setDefaultUncaughtExceptionHandler { t, e ->
+      try {
+        openFileOutput("last_crash.txt", MODE_PRIVATE).use {
+          it.write(("$e\n" + Log.getStackTraceString(e)).toByteArray())
+        }
+      } catch (_: Exception) {}
+      try { defHandler?.uncaughtException(t, e) } catch (_: Exception) {}
     }
     val lay = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(48,48,48,48) }
-    log = TextView(this).apply { textSize = 16f; text = "SF4 Loader SVC3 (skip-bad-record fix)\nTap RUN, watch markers." }
+    log = TextView(this).apply { textSize = 16f; text = "SF4 Loader SVC4 (crash capture)\nTap RUN. If it crashes, reopen + SHOW CRASH." }
     val run = Button(this).apply { text = "RUN"; textSize = 28f; setOnClickListener { runAll() } }
-    lay.addView(run)
+    val show = Button(this).apply { text = "SHOW CRASH"; textSize = 20f; setOnClickListener { showCrash() } }
+    lay.addView(run); lay.addView(show)
     val sv = ScrollView(this).apply { addView(log) }
     lay.addView(sv)
     setContentView(lay)
+  }
+
+  fun showCrash() {
+    val c = try { openFileInput("last_crash.txt").bufferedReader().readText() } catch (e: Exception) { "(no crash recorded)" }
+    val m = try { openFileInput("marks.txt").bufferedReader().readText() } catch (e: Exception) { "(no marks)" }
+    log.text = "CRASH:\n$c\n\nMARKS:\n$m"
   }
 
   fun runAll() {
