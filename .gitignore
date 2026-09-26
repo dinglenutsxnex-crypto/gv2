@@ -1,0 +1,13 @@
+# local-only: toolchain lives here, IDA scratch, big binaries
+_tools/
+/libsf4.so
+*.id0
+*.id1
+*.id2
+*.nam
+*.til
+*.apk
+*.zip
+local.properties
+.gradle/
+build/
