@@ -2,7 +2,7 @@ plugins { id 'com.android.application'; id 'org.jetbrains.kotlin.android' }
 android {
   namespace 'com.sf4loader'
   compileSdk 34
-  defaultConfig { applicationId 'com.sf4loader'; minSdk 26; targetSdk 34; versionCode 7; versionName '1.0-svc4' }
+  defaultConfig { applicationId 'com.sf4loader'; minSdk 26; targetSdk 34; versionCode 8; versionName '1.0-rev' }
   signingConfigs {
     debug {
       storeFile file('../debug.keystore')

@@ -57,7 +57,7 @@ class MainActivity : Activity() {
       try { defHandler?.uncaughtException(t, e) } catch (_: Exception) {}
     }
     val lay = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(48,48,48,48) }
-    log = TextView(this).apply { textSize = 16f; text = "SF4 Loader SVC4 (crash capture)\nTap RUN. If it crashes, reopen + SHOW CRASH." }
+    log = TextView(this).apply { textSize = 16f; text = "SF4 Loader REV (original menu dex + watchdog NOP only)\nTap RUN." }
     val run = Button(this).apply { text = "RUN"; textSize = 28f; setOnClickListener { runAll() } }
     val show = Button(this).apply { text = "SHOW CRASH"; textSize = 20f; setOnClickListener { showCrash() } }
     lay.addView(run); lay.addView(show)
