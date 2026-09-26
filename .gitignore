@@ -10,5 +10,6 @@ _tools/
 *.zip
 local.properties
 SF4Loader/debug.keystore
+androguard.db
 .gradle/
 build/
