@@ -57,7 +57,7 @@ class MainActivity : Activity() {
       try { defHandler?.uncaughtException(t, e) } catch (_: Exception) {}
     }
     val lay = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(48,48,48,48) }
-    log = TextView(this).apply { textSize = 16f; text = "SF4 Loader REV (original menu dex + watchdog NOP only)\nTap RUN." }
+    log = TextView(this).apply { textSize = 16f; text = "SF4 Loader SVC5 (no-WebView + copy)\nTap RUN." }
     val run = Button(this).apply { text = "RUN"; textSize = 28f; setOnClickListener { runAll() } }
     val show = Button(this).apply { text = "SHOW CRASH"; textSize = 20f; setOnClickListener { showCrash() } }
     lay.addView(run); lay.addView(show)
@@ -66,10 +66,22 @@ class MainActivity : Activity() {
     setContentView(lay)
   }
 
-  fun showCrash() {
+  fun crashText(): String {
     val c = try { openFileInput("last_crash.txt").bufferedReader().readText() } catch (e: Exception) { "(no crash recorded)" }
     val m = try { openFileInput("marks.txt").bufferedReader().readText() } catch (e: Exception) { "(no marks)" }
-    log.text = "CRASH:\n$c\n\nMARKS:\n$m"
+    return "CRASH:\n$c\n\nMARKS:\n$m"
+  }
+
+  fun showCrash() {
+    log.text = crashText()
+  }
+
+  fun copyCrash() {
+    try {
+      val cm = getSystemService(CLIPBOARD_SERVICE) as android.content.ClipboardManager
+      cm.setPrimaryClip(android.content.ClipData.newPlainText("crash", crashText()))
+      log.text = "copied. paste it here."
+    } catch (e: Exception) { log.text = "copy failed: $e" }
   }
 
   fun runAll() {
