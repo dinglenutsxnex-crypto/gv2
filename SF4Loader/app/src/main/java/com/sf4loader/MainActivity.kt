@@ -48,7 +48,7 @@ class MainActivity : Activity() {
       try { Log.e(TAG, "CRASH: $e") } catch (_: Exception) {}
     }
     val lay = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(48,48,48,48) }
-    log = TextView(this).apply { textSize = 16f; text = "SF4 Loader SVC (service-mode menu)\nTap RUN, watch markers." }
+    log = TextView(this).apply { textSize = 16f; text = "SF4 Loader SVC2 (watchdog+menu fixed)\nTap RUN, watch markers." }
     val run = Button(this).apply { text = "RUN"; textSize = 28f; setOnClickListener { runAll() } }
     lay.addView(run)
     val sv = ScrollView(this).apply { addView(log) }
