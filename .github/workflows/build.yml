@@ -24,6 +24,21 @@ jobs:
           yes | sdkmanager --licenses > /dev/null
           sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
+      - name: Pinned debug keystore (generate once, reuse via cache)
+        uses: actions/cache@v4
+        with:
+          path: SF4Loader/debug.keystore
+          key: debug-keystore-v1
+
+      - name: Create debug keystore if missing
+        run: |
+          if [ ! -f SF4Loader/debug.keystore ]; then
+            keytool -genkeypair -keystore SF4Loader/debug.keystore -alias androiddebugkey \
+              -keyalg RSA -keysize 2048 -validity 10950 -storetype JKS \
+              -storepass android -keypass android \
+              -dname "CN=Android Debug, O=Android, C=US"
+          fi
+
       - uses: gradle/gradle-build-action@v3
         with:
           gradle-version: 8.7

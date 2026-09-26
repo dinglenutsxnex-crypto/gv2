@@ -9,5 +9,6 @@ _tools/
 *.apk
 *.zip
 local.properties
+SF4Loader/debug.keystore
 .gradle/
 build/
