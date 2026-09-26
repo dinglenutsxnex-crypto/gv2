@@ -34,7 +34,7 @@ class MainActivity : Activity() {
       assets.open("libsf4.so").use { i -> dst.outputStream().use { o -> i.copyTo(o) } }
       var out = runSu("cp ${dst.absolutePath} /data/local/tmp/libsf4.so && chmod 755 /data/local/tmp/libsf4.so && chcon u:object_r:shell_data_file:s0 /data/local/tmp/libsf4.so 2>/dev/null; echo ok")
       log.text = "copy: $out\nfinding SF4..."
-      val pid = runSu("pidof com.nekki.shadowfight4").trim().split(" ").firstOrNull().orEmpty()
+      val pid = runSu("pidof com.nekki.shadowfightarena").trim().split(" ").firstOrNull().orEmpty()
       if (pid.isEmpty()) { log.text = "start SF4 first"; return }
       log.text = "SF4 pid=$pid, injecting (3s sleep in JNI_OnLoad)..."
       // injector binary bundled in assets too (build injector.c via NDK first)

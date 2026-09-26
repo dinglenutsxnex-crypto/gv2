@@ -6,7 +6,7 @@
 LIBSRC="$(dirname "$0")/libsf4.so"
 [ -f "$LIBSRC" ] || LIBSRC="/sdcard/SuInject/libsf4.so"
 DST="/data/local/tmp/libsf4.so"
-PKG="com.nekki.shadowfight4"
+PKG="com.nekki.shadowfightarena"
 
 cp "$LIBSRC" "$DST" || exit 1
 chmod 755 "$DST"
